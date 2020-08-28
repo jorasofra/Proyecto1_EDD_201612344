@@ -1,6 +1,8 @@
 #ifndef OBJETO_H
 #define OBJETO_H
 #include "Listagenerica.h"
+#include "Listagenerica.cpp"
+#include "Nodogenerico.h"
 #include "Coordenada.h"
 #include <iostream>
 using namespace std;

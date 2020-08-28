@@ -1,5 +1,7 @@
 #include "Coordenada.h"
 
+Coordenada::Coordenada(){}
+
 Coordenada::Coordenada(int x, int y){
     this->setX(x);
     this->setY(y);

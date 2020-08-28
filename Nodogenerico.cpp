@@ -1,8 +1,7 @@
 #include "Nodogenerico.h"
 
 template <class T>
-NodoGenerico<T>::NodoGenerico(T valor)
-{
+NodoGenerico<T>::NodoGenerico(T valor){
     this->valor = valor;
     this->siguiente = NULL;
 }

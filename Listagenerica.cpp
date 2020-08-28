@@ -24,11 +24,11 @@ int ListaGenerica<T>::getSize(){
 
 template <class T>
 void ListaGenerica<T>::agregar(T coor){
-    T *n = new T(coor);
+    NodoGenerico<T>* n = new NodoGenerico<T>(coor);
     if(this->cabeza == NULL)
         this->cabeza = n;
     else {
-        T *temp = this->cabeza;
+        NodoGenerico<T> *temp = this->cabeza;
         this->cabeza = n;
         n->setSiguiente(temp);
     }

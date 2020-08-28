@@ -7,6 +7,7 @@ class Coordenada
 private:
     int x,y;
 public:
+    Coordenada();
     Coordenada(int x, int y);
     void setX(int x);
     void setY(int y);
