@@ -3,6 +3,9 @@
 #include "nodomatriz.h"
 #include "nodoobjeto.h"
 #include "cabecera.h"
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 class Matriz
 {
@@ -10,6 +13,7 @@ public:
     Matriz();
     ~Matriz();
     void agregar(NodoObjeto *nuevo);
+    void graficar(int nivel);
 private:
     Cabecera* x;
     Cabecera* y;

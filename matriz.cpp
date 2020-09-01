@@ -186,3 +186,9 @@ void Matriz::agregar(NodoObjeto *nuevo){
         nuevo->setSur(tmp);
     }
 }
+
+void Matriz::graficar(int nivel){
+    ofstream archivo;
+    archivo.open("C:/Users/solis/OneDrive/Escritorio/salida.dot");
+    archivo.close();
+}

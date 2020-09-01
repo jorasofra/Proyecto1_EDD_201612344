@@ -1,0 +1,6 @@
+#include "Coordenada.h"
+
+Coordenada::Coordenada()
+{
+
+}
