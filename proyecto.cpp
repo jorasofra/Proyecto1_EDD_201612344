@@ -7,16 +7,13 @@ Proyecto::Proyecto(){
 Proyecto::Proyecto(string nombre)
 {
     this->id = 0;
-    this->nombre = nombre;
+    this->setNombre(nombre);
     this->listaNiveles = new ListaGenerica<Nivel>();
-}
-
-void Proyecto::setId(int id){
-    this->id = id;
 }
 
 void Proyecto::setNombre(string nombre){
     this->nombre = nombre;
+    this->id = this->convertirID(nombre);
 }
 
 string Proyecto::getNombre(){
@@ -25,4 +22,17 @@ string Proyecto::getNombre(){
 
 int Proyecto::getId(){
     return this->id;
+}
+
+void Proyecto::agregarNivel(Nivel nivel){
+    this->listaNiveles->agregar(nivel);
+}
+
+int Proyecto::convertirID(string nombre){
+    int id = 0;
+    for (int l = 0; l < (int)nombre.length(); l++){
+        char n = (char)nombre.at(l);
+        id += n;
+    }
+    return id;
 }

@@ -13,7 +13,8 @@ public:
     Matriz();
     ~Matriz();
     void agregar(NodoObjeto *nuevo);
-    void graficar(int nivel);
+    void graficar();
+
 private:
     Cabecera* x;
     Cabecera* y;

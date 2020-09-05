@@ -187,8 +187,115 @@ void Matriz::agregar(NodoObjeto *nuevo){
     }
 }
 
-void Matriz::graficar(int nivel){
+void Matriz::graficar(){
     ofstream archivo;
     archivo.open("C:/Users/solis/OneDrive/Escritorio/salida.dot");
+
+    archivo<<"digraph Matriz { \n\tnode[shape = box]"<<endl;
+    archivo<<"\tMt[ label = \"Pivote\", width = 1.5, style = filled, fillcolor = firebrick1, group = 1 ];"<<endl;
+    archivo<<"\te0[ shape = point, width = 0 ];"<<endl;
+    archivo<<"\te1[ shape = point, width = 0 ];"<<endl;
+
+    string rankX = "{rank = same; Mt;";
+
+    Cabecera *fila = this->y;
+
+    int contador = 0;
+    archivo << "\t//Se crean las cabeceras filas" << endl;
+
+    while (fila != NULL){
+        archivo << "\tF" << contador << "[label=";
+        archivo << "\"" << fila->getPosicion() << "\"" << "width=1.5 group = 1];" << endl;
+        fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
+        contador++;
+    }
+
+    fila = this->y;
+    contador = 0;
+
+    archivo << "\t//Enlaces cabeceras filas" << endl;
+
+    while ((Cabecera*)((NodoMatriz*)fila)->getSur() != NULL){
+        archivo << "\tF" << contador << "->" << "F" << contador + 1 << endl;
+        archivo << "\tF" << contador + 1 << "->" << "F" << contador<< endl;
+        fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
+        contador++;
+    }
+
+    Cabecera *columna = this->x;
+    contador = 0;
+    int grupo = 2;
+    archivo << "\t//Se crean las cabeceras columnas" << endl;
+
+    while (columna != NULL) {
+        archivo << "\tC" << contador << "[label=";
+        archivo << "\"" << columna->getPosicion() << "\"" << "width=1.5 group = " << to_string(grupo) << "];" << endl;
+        rankX += "C" + to_string(contador) + ";";
+        columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
+        grupo++;
+        contador++;
+    }
+    rankX += "}";
+
+    columna = this->x;
+    contador = 0;
+
+    archivo << "\t//Enlaces cabeceras columnas" << endl;
+
+    while ((Cabecera*)((NodoMatriz*)columna)->getEste() != NULL) {
+        archivo << "\tC" << contador << "->" << "C" << contador + 1 << endl;
+        archivo << "\tC" << contador + 1 << "->" << "C" << contador<< endl;
+        columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
+        contador++;
+    }
+
+    archivo << "\tMt -> F0" << endl;
+    archivo << "\tMt -> C0" << endl;
+
+    archivo << "\t" << rankX << endl;
+
+    //fila = this->y;
+    columna = this->x;
+    contador = 0;
+    int contador2 = 0;
+    grupo = 2;
+
+    archivo << "\t//Creacion de nodos internos "<<endl;
+
+    while(columna != NULL) {
+
+        fila = (Cabecera*)((NodoMatriz*)columna)->getSur();
+
+        while(fila != NULL){
+            archivo << "\tC" << to_string(contador) << "_F" << to_string(contador2);
+            archivo << " [label = \"" << ((NodoObjeto*)fila)->getLetraObjeto() << "\"";
+            archivo << " width = 1.5 style = filled, fillcolor = \"" << ((NodoObjeto*)fila)->getColor();
+            archivo << "\", group = " << to_string(grupo) << "];" << endl;
+            fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
+            contador2++;
+        }
+        grupo++;
+        contador++;
+        contador2 = 0,
+        columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
+    }
+
+    archivo << "\t//Creacion de enlaces internos columnas"<<endl;
+
+    columna = this->x;
+    contador = 0;
+    contador2 = 0;
+
+    while ((Cabecera*)((NodoMatriz*)columna)->getEste() != NULL) {
+        string rankI = "{rank = same; F" + to_string(contador) + ";";
+        fila = (Cabecera*)((NodoMatriz*)columna)->getSur();
+
+
+        columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
+    }
+
+    archivo << "}"<<endl;
+
     archivo.close();
+
 }

@@ -11,14 +11,15 @@ public:
     Proyecto();
     Proyecto(string nombre);
     void setNivel();
-    void setId(int id);
     void setNombre(string nombre);
+    void agregarNivel(Nivel nivel);
     string getNombre();
     int getId();
 private:
     int id;
     string nombre;
     ListaGenerica<Nivel> *listaNiveles;
+    int convertirID(string nombre);
 };
 
 #endif // PROYECTO_H
