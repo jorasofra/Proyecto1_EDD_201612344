@@ -164,7 +164,7 @@ void Matriz::agregar(NodoObjeto *nuevo){
         x = this->crearX(nuevo->getPosX());
     }
     NodoMatriz *izquierda = this->ultimoX(y, nuevo->getPosX());
-    NodoMatriz *superior = this->ultimoY(x, nuevo->getPosY());
+    NodoMatriz *inferior = this->ultimoY(x, nuevo->getPosY());
     if(izquierda->getEste() == NULL){
         izquierda->setEste(nuevo);
         nuevo->setOeste(izquierda);
@@ -175,17 +175,26 @@ void Matriz::agregar(NodoObjeto *nuevo){
         tmp->setOeste(nuevo);
         nuevo->setEste(tmp);
     }
-    if(superior->getSur() == NULL){
-        superior->setSur(nuevo);
-        nuevo->setNorte(superior);
+
+    if (nuevo->getPosY() < ((NodoObjeto*)inferior)->getPosY()){
+        NodoMatriz* tmp = inferior->getNorte();
+        inferior->setNorte(nuevo);
+        nuevo->setSur(inferior);
+        tmp->setSur(nuevo);
+        nuevo->setNorte(tmp);
     } else {
-        NodoMatriz* tmp=superior->getSur();
-        superior->setSur(nuevo);
-        nuevo->setNorte(superior);
-        tmp->setNorte(nuevo);
-        nuevo->setSur(tmp);
+        if(inferior->getSur() == NULL){
+            inferior->setSur(nuevo);
+            nuevo->setNorte(inferior);
+        } else {
+            NodoMatriz* tmp=inferior->getSur();
+            inferior->setSur(nuevo);
+            nuevo->setNorte(inferior);
+            tmp->setNorte(nuevo);
+            nuevo->setSur(tmp);
+        }
     }
-}
+ }
 
 void Matriz::graficar(){
     ofstream archivo;
@@ -200,53 +209,45 @@ void Matriz::graficar(){
 
     Cabecera *fila = this->y;
 
-    int contador = 0;
     archivo << "\t//Se crean las cabeceras filas" << endl;
 
     while (fila != NULL){
-        archivo << "\tF" << contador << "[label=";
+        archivo << "\tF" << fila->getPosicion() << "[label=";
         archivo << "\"" << fila->getPosicion() << "\"" << "width=1.5 group = 1];" << endl;
         fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
-        contador++;
     }
 
     fila = this->y;
-    contador = 0;
 
     archivo << "\t//Enlaces cabeceras filas" << endl;
 
     while ((Cabecera*)((NodoMatriz*)fila)->getSur() != NULL){
-        archivo << "\tF" << contador << "->" << "F" << contador + 1 << endl;
-        archivo << "\tF" << contador + 1 << "->" << "F" << contador<< endl;
+        archivo << "\tF" << fila->getPosicion() << "->" << "F" << ((Cabecera*)fila->getSur())->getPosicion() << endl;
+        archivo << "\tF" << ((Cabecera*)fila->getSur())->getPosicion() << "->" << "F" << fila->getPosicion() << endl;
         fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
-        contador++;
     }
 
     Cabecera *columna = this->x;
-    contador = 0;
     int grupo = 2;
     archivo << "\t//Se crean las cabeceras columnas" << endl;
 
     while (columna != NULL) {
-        archivo << "\tC" << contador << "[label=";
+        archivo << "\tC" << columna->getPosicion() << "[label=";
         archivo << "\"" << columna->getPosicion() << "\"" << "width=1.5 group = " << to_string(grupo) << "];" << endl;
-        rankX += "C" + to_string(contador) + ";";
+        rankX += "C" + to_string(columna->getPosicion()) + ";";
         columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
         grupo++;
-        contador++;
     }
     rankX += "}";
 
     columna = this->x;
-    contador = 0;
 
     archivo << "\t//Enlaces cabeceras columnas" << endl;
 
     while ((Cabecera*)((NodoMatriz*)columna)->getEste() != NULL) {
-        archivo << "\tC" << contador << "->" << "C" << contador + 1 << endl;
-        archivo << "\tC" << contador + 1 << "->" << "C" << contador<< endl;
+        archivo << "\tC" << columna->getPosicion() << "->" << "C" << ((Cabecera*)columna->getEste())->getPosicion() << endl;
+        archivo << "\tC" << ((Cabecera*)columna->getEste())->getPosicion() << "->" << "C" << columna->getPosicion() << endl;
         columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
-        contador++;
     }
 
     archivo << "\tMt -> F0" << endl;
@@ -256,46 +257,71 @@ void Matriz::graficar(){
 
     //fila = this->y;
     columna = this->x;
-    contador = 0;
-    int contador2 = 0;
     grupo = 2;
 
     archivo << "\t//Creacion de nodos internos "<<endl;
 
     while(columna != NULL) {
 
-        fila = (Cabecera*)((NodoMatriz*)columna)->getSur();
+        NodoObjeto* fila = (NodoObjeto*)columna->getSur();
 
         while(fila != NULL){
-            archivo << "\tC" << to_string(contador) << "_F" << to_string(contador2);
+            archivo << "\tC" << columna->getPosicion() << "_F" << fila->getPosY();
             archivo << " [label = \"" << ((NodoObjeto*)fila)->getLetraObjeto() << "\"";
             archivo << " width = 1.5 style = filled, fillcolor = \"" << ((NodoObjeto*)fila)->getColor();
-            archivo << "\", group = " << to_string(grupo) << "];" << endl;
-            fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
-            contador2++;
+            archivo << "\", group = " << grupo << "];" << endl;
+            fila = (NodoObjeto*)fila->getSur();
         }
         grupo++;
-        contador++;
-        contador2 = 0,
         columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
     }
 
     archivo << "\t//Creacion de enlaces internos columnas"<<endl;
 
     columna = this->x;
-    contador = 0;
-    contador2 = 0;
 
-    while ((Cabecera*)((NodoMatriz*)columna)->getEste() != NULL) {
-        string rankI = "{rank = same; F" + to_string(contador) + ";";
-        fila = (Cabecera*)((NodoMatriz*)columna)->getSur();
+    while (columna != NULL) {
+        NodoObjeto* fila = (NodoObjeto*)columna->getSur();
 
+        archivo << "\tC" << fila->getPosX() << "->C" << fila->getPosX() << "_F" << fila->getPosY() << endl;
+        while (fila->getSur() != NULL){
+            archivo << "\tC" << fila->getPosX() << "_F" << fila->getPosY() << "->";
+            archivo << "C" << ((NodoObjeto*)fila->getSur())->getPosX() << "_F" << ((NodoObjeto*)fila->getSur())->getPosY() << endl;
+            archivo << "\tC" << ((NodoObjeto*)fila->getSur())->getPosX() << "_F" << ((NodoObjeto*)fila->getSur())->getPosY() << "->";
+            archivo << "C" << fila->getPosX() << "_F" << fila->getPosY()<< endl;
+            fila = (NodoObjeto*)fila->getSur();
+        }
 
         columna = (Cabecera*)((NodoMatriz*)columna)->getEste();
+    }
+
+    fila = this->y;
+
+    while (fila != NULL){
+        NodoObjeto* columna = (NodoObjeto*)fila->getEste();
+        archivo << "\tF" << columna->getPosY() << "->C" << columna->getPosX() << "_F" << columna->getPosY() << endl;
+
+        string rankI = "\t{rank = same; F" + to_string(fila->getPosicion()) + "; ";
+
+        rankI += "C" + to_string(columna->getPosX()) + "_F" + to_string(columna->getPosY()) + "; ";
+
+        while(columna->getEste() != NULL){
+            archivo << "\tC" << columna->getPosX() << "_F" << columna->getPosY() << "->";
+            archivo << "C" << ((NodoObjeto*)columna->getEste())->getPosX() << "_F" << ((NodoObjeto*)columna->getEste())->getPosY() << endl;
+            archivo << "\tC" << ((NodoObjeto*)columna->getEste())->getPosX() << "_F" << ((NodoObjeto*)columna->getEste())->getPosY() << "->";
+            archivo << "C" << columna->getPosX() << "_F" << columna->getPosY()<< endl;
+
+            rankI += "C" + to_string(((NodoObjeto*)columna->getEste())->getPosX()) + "_F" + to_string(((NodoObjeto*)columna->getEste())->getPosY()) + ";";
+
+            columna = (NodoObjeto*)columna->getEste();
+        }
+
+        archivo << rankI << "}" << endl;
+
+        fila = (Cabecera*)((NodoMatriz*)fila)->getSur();
     }
 
     archivo << "}"<<endl;
 
     archivo.close();
-
 }
