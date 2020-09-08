@@ -148,3 +148,36 @@ void ArbolAVL::agregar(Proyecto pro){
     bool *a = &b;
     this->raiz = agregar(this->raiz, pro, *a);
 }
+
+void ArbolAVL::postOrden(NodoAVL *raiz){
+    if (raiz != NULL){
+        postOrden((NodoAVL*)raiz->getIzquierda());
+        postOrden((NodoAVL*)raiz->getDerecha());
+        cout << raiz->getProyecto().getNombre() << " " << raiz->getProyecto().getId() << endl;
+    }
+}
+
+void ArbolAVL::inOrden(){
+    if (raiz != NULL){
+        postOrden((NodoAVL*)raiz->getIzquierda());
+        cout << raiz->getProyecto().getNombre() << " " << raiz->getProyecto().getId() << endl;
+        postOrden((NodoAVL*)raiz->getDerecha());
+    }
+    cout << raiz->getProyecto().getId() << endl;
+}
+
+ListaGenerica<Proyecto>* ArbolAVL::getProyecto(int codigo){
+    this->getProyectop(this->raiz, codigo);
+    return this->busqueda;
+}
+
+void ArbolAVL::getProyectop(NodoAVL* n, int codigo){
+    if (codigo < n->getProyecto().getId()){
+        getProyectop((NodoAVL*)n->getIzquierda(), codigo);
+    } else if (codigo > n->getProyecto().getId()) {
+        getProyectop((NodoAVL*)n->getDerecha(), codigo);
+    } else if (codigo == n->getProyecto().getId()){
+        Proyecto pr = n->getProyecto();
+        this->busqueda->agregar(pr);
+    }
+}

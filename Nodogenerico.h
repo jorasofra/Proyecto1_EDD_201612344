@@ -7,6 +7,7 @@ template<class T>
 class NodoGenerico
 {
 public:
+    NodoGenerico();
     NodoGenerico(T valor);
     void setValor(T valor);
     T getValor();

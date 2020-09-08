@@ -27,3 +27,7 @@ void Nivel::setNumero(int numeroNivel){
 void Nivel::graficar(){
     this->matrizNivel->graficar();
 }
+
+int Nivel::getNumero(){
+    return this->numero;
+}

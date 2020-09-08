@@ -14,6 +14,7 @@ public:
     void agregarObjetoMatriz(NodoObjeto* objeto);
     void agregarObjetoArbol(Objeto objeto);
     void setNumero(int numeroNivel);
+    int getNumero();
     void graficar();
 private:
     int numero;

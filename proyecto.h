@@ -15,6 +15,7 @@ public:
     void agregarNivel(Nivel nivel);
     string getNombre();
     int getId();
+    void imprimirNiveles();
 private:
     int id;
     string nombre;

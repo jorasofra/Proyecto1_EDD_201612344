@@ -11,8 +11,22 @@ int main()
     ArbolAVL *a = new ArbolAVL();
 
     Proyecto pr;
+    pr.setNombre("Hola");
+
+    Proyecto pr2;
+    pr2.setNombre("Hol");
+
+    Proyecto pr3;
+    pr3.setNombre("loH");
+
     Nivel n;
-    n.setNumero(1);
+    n.setNumero(2);
+
+    Nivel n1;
+    n1.setNumero(3);
+
+    Nivel n2;
+    n2.setNumero(1);
 
     NodoObjeto *o1 = new NodoObjeto(0,0,'1',"#FFFFE0");
     NodoObjeto *o2 = new NodoObjeto(1,1,'2',"#FFFFE0");
@@ -33,10 +47,23 @@ int main()
     n.agregarObjetoMatriz(o8);
 
     pr.agregarNivel(n);
+    pr.agregarNivel(n1);
+    pr.agregarNivel(n2);
 
-    n.graficar();
+    //n.graficar();
 
     a->agregar(pr);
+    a->agregar(pr2);
+    a->agregar(pr3);
+    //a->inOrden();
+    ListaGenerica<Proyecto> *l = a->getProyecto(388);
+    NodoGenerico<Proyecto> *proyect = l->getCabeza();
+    cout << pr.getNombre() << endl;
+
+    while(proyect != NULL){
+        cout << proyect->getValor().getNombre() << endl;
+        proyect = proyect->getSiguiente();
+    }
 
     //Menu men;
     //men.encabezado();

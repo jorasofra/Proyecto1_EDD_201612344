@@ -25,7 +25,7 @@ int Proyecto::getId(){
 }
 
 void Proyecto::agregarNivel(Nivel nivel){
-    this->listaNiveles->agregar(nivel);
+    this->listaNiveles->insercionOrdenada(nivel);
 }
 
 int Proyecto::convertirID(string nombre){
@@ -35,4 +35,12 @@ int Proyecto::convertirID(string nombre){
         id += n;
     }
     return id;
+}
+
+void Proyecto::imprimirNiveles(){
+    NodoGenerico<Nivel>* aux = listaNiveles->imprimirNiveles();
+    while (aux != NULL) {
+        cout << aux->getValor().getNumero() << endl;
+        aux = aux->getSiguiente();
+    }
 }

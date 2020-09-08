@@ -13,8 +13,11 @@ public:
     ~ListaGenerica();
     int getSize();
     void agregar(T valor);
+    void insercionOrdenada(T valor);
     //void eliminarCoordenada(T valor);
     NodoGenerico<T>* imprimirCoordenadas();
+    NodoGenerico<T>* imprimirNiveles();
+    NodoGenerico<T>* getCabeza();
 private:
     NodoGenerico<T> *cabeza;
     int size;
